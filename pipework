@@ -44,7 +44,9 @@ case "$MACADDR" in
   U:*)
     macunique="${MACADDR#*:}"
     # now generate a 48-bit hash string from $macunique
-    MACADDR=$(echo $macunique|md5sum|sed 's/^\(..\)\(..\)\(..\)\(..\)\(..\).*$/02:\1:\2:\3:\4:\5/')
+    # fix by sunminlei
+    HWUUID=$(/usr/sbin/dmidecode -t 1 | grep UUID |awk '{print $NF}')
+    MACADDR=$(echo "${macunique}_${HWUUID}"|md5sum|sed 's/^\(..\)\(..\)\(..\)\(..\)\(..\).*$/02:\1:\2:\3:\4:\5/')
    ;;
 esac
 
